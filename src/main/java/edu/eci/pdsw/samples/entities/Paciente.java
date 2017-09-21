@@ -19,6 +19,7 @@ package edu.eci.pdsw.samples.entities;
 
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -36,6 +37,7 @@ public class Paciente {
     
 
     public Paciente(int id,String tipoid, String nombre, Date fechaNacimiento,Eps eps) {
+        this.id=id;
         this.tipoId = tipoid;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
@@ -103,7 +105,37 @@ public class Paciente {
         }
         return rep;
     }
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + this.id;
+        hash = 23 * hash + Objects.hashCode(this.tipoId);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Paciente other = (Paciente) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (!Objects.equals(this.tipoId, other.tipoId)) {
+            return false;
+        }
+        return true;
+    }
+
+
     
     
 }

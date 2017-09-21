@@ -44,7 +44,7 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
 
     public ServiciosPacientesMock() {
         this.pacientes = new LinkedHashMap<>();
-        epsregistradas=new LinkedList<>();
+        epsregistradas = new LinkedList<>();
         cargarDatosEstaticos(pacientes);
     }
 
@@ -60,12 +60,15 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
     }
 
     @Override
-    public void registrarNuevoPaciente(Paciente paciente) throws ExcepcionServiciosPacientes {        
+    public void registrarNuevoPaciente(Paciente paciente) throws ExcepcionServiciosPacientes {
+        
         pacientes.put(new Tupla<>(paciente.getId(), paciente.getTipoId()), paciente);
+        
     }
 
     @Override
     public void agregarConsultaPaciente(int idPaciente, String tipoid, Consulta consulta) throws ExcepcionServiciosPacientes {
+        
         Paciente paciente = pacientes.get(new Tupla<>(idPaciente, tipoid));
         if (paciente != null) {
             consulta.setId(idconsulta);
@@ -82,7 +85,6 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
         temp.addAll(pacientes.values());
         return temp;
     }
-
 
     @Override
     public List<Consulta> obtenerConsultasEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
@@ -112,22 +114,22 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
         }
         return temp;
     }
-    
+
     @Override
     public long obtenerCostoEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         long deuda = 0;
         for (Paciente paciente : pacientes.values()) {
             if (paciente.getEps().getNombre().equals(nameEps)) {
                 for (Consulta consulta : paciente.getConsultas()) {
-                    if(consulta.getFechayHora().after(fechaInicio) && consulta.getFechayHora().before(fechaFin)){deuda += consulta.getCosto();}
+                    if (consulta.getFechayHora().after(fechaInicio) && consulta.getFechayHora().before(fechaFin)) {
+                        deuda += consulta.getCosto();
+                    }
                 }
             }
         }
         return deuda;
     }
 
-
-   
     private void cargarDatosEstaticos(Map<Tupla<Integer, String>, Paciente> pacientes) {
         try {
             Eps eps1 = new Eps("Compensar", "7289374982-0");
@@ -136,7 +138,7 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
             Eps eps4 = new Eps("Coomeva", "482738221-1");
             Eps eps5 = new Eps("Medimas", "78239842232-2");
             Eps eps6 = new Eps("SaludTotal", "8439009323-9");
-            
+
             epsregistradas.add(eps1);
             epsregistradas.add(eps2);
             epsregistradas.add(eps3);
@@ -144,13 +146,13 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
             epsregistradas.add(eps5);
             epsregistradas.add(eps6);
 
-            Paciente paciente1 = new Paciente(11111,"CC", "Juan Perez", java.sql.Date.valueOf("2000-01-01"), eps1);
-            Paciente paciente2 = new Paciente(22222,"CC", "Maria Rodriguez", java.sql.Date.valueOf("2000-01-01"), eps2);
-            Paciente paciente3 = new Paciente(33333,"CC", "Pedro Martinez", java.sql.Date.valueOf("1956-05-01"), eps3);
-            Paciente paciente4 = new Paciente(44444,"CC", "Martin Hernandez", java.sql.Date.valueOf("2000-01-01"), eps4);
-            Paciente paciente5 = new Paciente(55555,"CC", "Cristian Pinzon", java.sql.Date.valueOf("2000-01-01"), eps4);
-            Paciente paciente6 = new Paciente(66666,"CC", "Daniel Beltran", java.sql.Date.valueOf("1956-05-01"), eps5);
-            Paciente paciente7 = new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), eps6);
+            Paciente paciente1 = new Paciente(1, "CC", "Juan Perez", java.sql.Date.valueOf("2000-01-01"), eps1);
+            Paciente paciente2 = new Paciente(2, "CC", "Maria Rodriguez", java.sql.Date.valueOf("2000-01-01"), eps2);
+            Paciente paciente3 = new Paciente(3, "CC", "Pedro Martinez", java.sql.Date.valueOf("1956-05-01"), eps3);
+            Paciente paciente4 = new Paciente(4, "CC", "Martin Hernandez", java.sql.Date.valueOf("2000-01-01"), eps4);
+            Paciente paciente5 = new Paciente(5, "CC", "Cristian Pinzon", java.sql.Date.valueOf("2000-01-01"), eps4);
+            Paciente paciente6 = new Paciente(6, "CC", "Daniel Beltran", java.sql.Date.valueOf("1956-05-01"), eps5);
+            Paciente paciente7 = new Paciente(7, "CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), eps6);
 
             registrarNuevoPaciente(paciente1);
             registrarNuevoPaciente(paciente2);
@@ -186,13 +188,12 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
         }
 
     }
-
+    
     @Override
     public List<Eps> obtenerEPSsRegistradas() throws ExcepcionServiciosPacientes {
         return epsregistradas;
     }
 
-    
 }
 
 class Tupla<A, B> {
@@ -215,31 +216,22 @@ class Tupla<A, B> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.a);
-        hash = 71 * hash + Objects.hashCode(this.b);
-        return hash;
+        return a.hashCode() + b.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+        if (obj instanceof Tupla<?, ?>) {
+            return ((Tupla<?, ?>) obj).getA().equals(this.getA())
+                    && ((Tupla<?, ?>) obj).getB().equals(this.getB());
+        } else {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Tupla<?, ?> other = (Tupla<?, ?>) obj;
-        if (!Objects.equals(this.a, other.a)) {
-            return false;
-        }
-        if (!Objects.equals(this.b, other.b)) {
-            return false;
-        }
-        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Touple:(" + a.toString() + "," + b.toString() + ")";
     }
 
 }
