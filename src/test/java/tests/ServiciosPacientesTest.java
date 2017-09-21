@@ -6,6 +6,8 @@
 package tests;
 
 import edu.eci.pdsw.samples.entities.Paciente;
+import edu.eci.pdsw.samples.entities.Consulta;
+import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.services.ExcepcionServiciosPacientes;
 import edu.eci.pdsw.samples.services.impl.ServiciosPacientesMock;
 import org.junit.Before;
@@ -30,7 +32,16 @@ import static org.junit.Assert.*;
  *    RESULTADO: Excepcion
  * 
  *
+ * CLASES DE EQUIVALENCIA Registro nueva consulta a paciente
  * 
+ * CE1: DESCRIPCION: El paciente no se encentre registrado
+ *      RESULTADO: Excepcion
+ * 
+ * CE2: DESCRIPCION: El paciente no existe
+ *      RESULTADO: Excepcion
+ * 
+ * CE3: DESCRIPCION: El paciente existe
+ *      RESULTADO: El id de la consulta aumenta 1 y se agrega la consulta al paciente
  */
 public class ServiciosPacientesTest {
     
@@ -45,11 +56,19 @@ public class ServiciosPacientesTest {
     public void registroPaciente(){
         ServiciosPacientesMock servicios= new ServiciosPacientesMock();
         try{
-            servicios.registrarNuevoPaciente(new Paciente(77777,null, "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), eps6));
+            servicios.registrarNuevoPaciente(new Paciente(77777,null, "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
         }catch (ExcepcionServiciosPacientes e){
             assertEquals(e.getMessage(),"El tipo de identificaión no es valido");
         }
-        
+    }
+    @Test    
+    public void registroConsultas(){
+        ServiciosPacientesMock servicios=new ServiciosPacientesMock();
+        try{
+            servicios.agregarConsultaPaciente(0, "CC", new Consulta(java.sql.Date.valueOf("2000-01-01"), "Dolor de cabeza", 454));  
+        }catch(ExcepcionServiciosPacientes e){
+            assertEquals(e.getMessage(),"Paciente 0 no esta registrado");
+        }
     }
     
 }
