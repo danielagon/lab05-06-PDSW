@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3c.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -5,5 +6,28 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head></h:head>
     <h:body>
+        <p:layout fullPage="true">
+            <h:form id="registroPacientes">
+                <p:layoutUnit position="center">
+                    <h:panelGrid columns="2" rowClasses="6">
+                        <h:outputText value="Nombre paciente:"/>
+                        <p:inputText value="#{HistorialPacientes.nombre}"/>
+                        <h:outputText value="Tipo de Identificacion:"/>
+                        <p:inputText value="#{HistorialPacientes.tipoId}"/>
+                        <h:outputText value="Numero de idenificacion:"/>
+                        <p:inputText value="#{HistorialPacientes.id}"/>
+                        <h:outputText  value="Fecha de nacimiento:"/>
+                        <p:calendar value="#{HistorialPacientes.fechaNac}" pattern="MM/dd/yyyy"/>
+                        <p:outputLabel for="eps" value="EPS:" />
+                        <p:selectOneMenu id="eps" value="#{HistorialPacientes.eps}">
+                            <f:selectItem itemLabel="Seleccionar EPS" noSelectionOption="true"/>
+                            <f:selectItems value="#{HistorialPacientes.epsNombres}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Registrar paciente" actionListener="#{HistorialPacientes.registrarPaciente()}"/>
+                    </h:panelGrid>
+                    
+                </p:layoutUnit> 
+            </h:form>
+        </p:layout>
     </h:body>
 </html>
