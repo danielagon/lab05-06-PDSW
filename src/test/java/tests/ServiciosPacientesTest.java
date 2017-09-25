@@ -37,10 +37,7 @@ import static org.junit.Assert.*;
  * CE1: DESCRIPCION: El paciente no se encentre registrado
  *      RESULTADO: Excepcion
  * 
- * CE2: DESCRIPCION: El paciente no existe
- *      RESULTADO: Excepcion
- * 
- * CE3: DESCRIPCION: El paciente existe
+ * CE2: DESCRIPCION: El paciente existe
  *      RESULTADO: El id de la consulta aumenta 1 y se agrega la consulta al paciente
  */
 public class ServiciosPacientesTest {
@@ -53,10 +50,31 @@ public class ServiciosPacientesTest {
     }
     
     @Test
+    public void registrarPacienteRepetido(){
+        ServiciosPacientesMock servicios= new ServiciosPacientesMock();
+        try{
+            servicios.registrarNuevoPaciente(new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
+            servicios.registrarNuevoPaciente(new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
+        }catch (ExcepcionServiciosPacientes e){
+            assertEquals(e.getMessage(),"El paciente ya se encuentra registrado");
+        }
+    }
+    
+    @Test
+    public void registrarPacienteIdentificacionInvalida(){
+        ServiciosPacientesMock servicios= new ServiciosPacientesMock();
+        try{
+            servicios.registrarNuevoPaciente(new Paciente(0,"CC", "Rodolfo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
+        }catch (ExcepcionServiciosPacientes e){
+            assertEquals(e.getMessage(),"El numero de identificacion no es valido");
+        }
+    }
+    
+    @Test
     public void registroPaciente(){
         ServiciosPacientesMock servicios= new ServiciosPacientesMock();
         try{
-            servicios.registrarNuevoPaciente(new Paciente(77777,null, "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
+            servicios.registrarNuevoPaciente(new Paciente(145,"hola", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
         }catch (ExcepcionServiciosPacientes e){
             assertEquals(e.getMessage(),"El tipo de identificaión no es valido");
         }
@@ -69,6 +87,21 @@ public class ServiciosPacientesTest {
         }catch(ExcepcionServiciosPacientes e){
             assertEquals(e.getMessage(),"Paciente 0 no esta registrado");
         }
+    }
+    
+    @Test
+    public void registrarConsultaPaciente(){
+        ServiciosPacientesMock servicios=new ServiciosPacientesMock();
+        try{
+            Paciente paciente=new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9"));
+            servicios.registrarNuevoPaciente(paciente);
+            int numeroConsultas=paciente.getConsultas().size();
+            servicios.agregarConsultaPaciente(77777, "CC", new Consulta(java.sql.Date.valueOf("2000-01-01"), "Dolor de cabeza", 454)); 
+            assertEquals(numeroConsultas+1,paciente.getConsultas().size());
+        }catch(ExcepcionServiciosPacientes e){
+            
+        }
+        
     }
     
 }

@@ -62,8 +62,15 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
     @Override
     public void registrarNuevoPaciente(Paciente paciente) throws ExcepcionServiciosPacientes {
         
+        if (!(paciente.getTipoId().equals("CC") || paciente.getTipoId().equals("TI") )){
+            throw new ExcepcionServiciosPacientes("El tipo de identificaión no es valido");
+        }else if (pacientes.containsKey(new Tupla<> (paciente.getId(), paciente.getTipoId()))){
+            
+            throw new ExcepcionServiciosPacientes("El paciente ya se encuentra registrado");
+        }else if (paciente.getId()<=0){
+            throw new ExcepcionServiciosPacientes("El numero de identificacion no es valido");
+        }
         pacientes.put(new Tupla<>(paciente.getId(), paciente.getTipoId()), paciente);
-        
     }
 
     @Override
