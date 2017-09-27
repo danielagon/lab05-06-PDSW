@@ -7,7 +7,7 @@
     <h:body>
         <p:layout fullPage="true">
             <h:form id="registroConsultas">
-                <p:layoutUnit position="center">
+                <p:layoutUnit position="west" style="min-width:400px;min-height:200px;">
                     <h:panelGrid columns="2" rowClasses="4">
                         <h:outputText value="Fecha y Hora: "/>
                         <p:calendar value="#{HistorialPacientes.fechayHora}" pattern="MM/dd/yyyy HH:mm"/>
@@ -15,8 +15,21 @@
                         <p:inputText value="#{HistorialPacientes.resumen}"/>
                         <h:outputText value="Costo consulta: "/>
                         <p:inputText value="#{HistorialPacientes.costo}"/>
-                        <p:commandButton value="Registrar consulta" actionListener="#{HistorialPacientes.registrarConsulta()}"/>
+                        <p:commandButton value="Registrar consulta" actionListener="#{HistorialPacientes.registrarConsulta()}" update="tablaConsultas"/>
                     </h:panelGrid>
+                </p:layoutUnit>
+                <p:layoutUnit id="tabla_Consultas" position="center">
+                    <p:dataTable rowIndexVar="fila" id="tablaConsultas" var="consulta" value="#{HistorialPacientes.consultas}" rowKey="#{consulta}" >
+                        <p:column headerText="Fecha y Hora">
+                            <h:outputText value="#{consulta.fechayHora}" />
+                        </p:column>
+                        <p:column headerText="Resumen">
+                            <h:outputText value="#{consulta.resumen}" />
+                        </p:column>
+                        <p:column headerText="Costo" >
+                            <h:outputText value="#{consulta.costo}"/>
+                        </p:column>
+                    </p:dataTable>
                 </p:layoutUnit>
             </h:form>
         </p:layout>

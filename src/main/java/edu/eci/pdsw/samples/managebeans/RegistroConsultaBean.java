@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 
@@ -46,6 +47,7 @@ public class RegistroConsultaBean implements Serializable {
     private long costo;
     private List<Paciente> pacientes;
     private Paciente pacienteSeleccionado;
+    private Set<Consulta> consultas;
     
     public void registrarPaciente() throws ExcepcionServiciosPacientes{
         int posicion=0;
@@ -55,9 +57,8 @@ public class RegistroConsultaBean implements Serializable {
             }
         }
         try{
-            System.out.println(servicepacientes.consultarPacientes().size());
             servicepacientes.registrarNuevoPaciente(new Paciente(id,tipoId,nombre,fechaNac,epsRegistradas.get(posicion)));
-            System.out.println(servicepacientes.consultarPacientes().size());
+            pacientes=servicepacientes.consultarPacientes();
         }catch(ExcepcionServiciosPacientes e){
             
         }
@@ -66,11 +67,21 @@ public class RegistroConsultaBean implements Serializable {
     
     public void registrarConsulta() throws ExcepcionServiciosPacientes{
         try{
-            servicepacientes.agregarConsultaPaciente(id, tipoId, new Consulta(fechayHora,resumen,costo));
+            servicepacientes.agregarConsultaPaciente(pacienteSeleccionado.getId(), pacienteSeleccionado.getTipoId(), new Consulta(fechayHora,resumen,costo));
+            consultas=pacienteSeleccionado.getConsultas();
         }catch (ExcepcionServiciosPacientes e){
-        
+            
         }
     }
+
+    public Set<Consulta> getConsultas() {
+        return consultas;
+    }
+
+    public void setConsultas(Set<Consulta> consultas) {
+        this.consultas = consultas;
+    }
+    
     
     public List<Paciente> getPacientes() {
         return pacientes;
@@ -87,7 +98,7 @@ public class RegistroConsultaBean implements Serializable {
     public void setPacienteSeleccionado(Paciente pacienteSeleccionado) {
         this.pacienteSeleccionado = pacienteSeleccionado;
     }
-
+    
     public Date getFechayHora() {
         return fechayHora;
     }
@@ -167,12 +178,11 @@ public class RegistroConsultaBean implements Serializable {
 
     public void setFechaNac(Date fechaNac) {
         this.fechaNac = fechaNac;
+    }    
+
+    public void seleccionarPaciente(){
+        consultas = pacienteSeleccionado.getConsultas();
     }
-    
-
-    
-
-    
 
     public RegistroConsultaBean() {
         try{
