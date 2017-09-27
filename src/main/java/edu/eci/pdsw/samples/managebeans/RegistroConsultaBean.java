@@ -6,6 +6,7 @@
 package edu.eci.pdsw.samples.managebeans;
 
 
+import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
 import edu.eci.pdsw.samples.services.ExcepcionServiciosPacientes;
@@ -39,6 +40,9 @@ public class RegistroConsultaBean implements Serializable {
     private Date fechaNac;
     private List<Eps> epsRegistradas;
     private final ServiciosPacientes servicepacientes = ServiciosHistorialPacientesFactory.getInstance().getServiciosPaciente();
+    private Date fechayHora;
+    private String resumen;
+    private long costo;
     
     public void registrarPaciente() throws ExcepcionServiciosPacientes{
         int posicion=0;
@@ -56,6 +60,40 @@ public class RegistroConsultaBean implements Serializable {
         }
         
     }
+    
+    public void registrarConsulta() throws ExcepcionServiciosPacientes{
+        try{
+            servicepacientes.agregarConsultaPaciente(id, tipoId, new Consulta(fechayHora,resumen,costo));
+        }catch (ExcepcionServiciosPacientes e){
+        
+        }
+    }
+
+    public Date getFechayHora() {
+        return fechayHora;
+    }
+
+    public void setFechayHora(Date fechayHora) {
+        this.fechayHora = fechayHora;
+    }
+
+    public String getResumen() {
+        return resumen;
+    }
+
+    public void setResumen(String resumen) {
+        this.resumen = resumen;
+    }
+
+    public long getCosto() {
+        return costo;
+    }
+
+    public void setCosto(long costo) {
+        this.costo = costo;
+    }
+    
+    
     
     public List<String> getEpsNombres() {
         return epsNombres;

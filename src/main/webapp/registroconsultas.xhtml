@@ -5,6 +5,21 @@
     <h:head></h:head>
 
     <h:body>
+        <p:layout fullPage="true">
+            <h:form id="registroConsultas">
+                <p:layoutUnit position="center">
+                    <h:panelGrid columns="2" rowClasses="4">
+                        <h:outputText value="Fecha y Hora: "/>
+                        <p:calendar value="#{HistorialPacientes.fechayHora}" pattern="MM/dd/yyyy HH:mm"/>
+                        <h:outputText value="Resumen consulta: "/>
+                        <p:inputText value="#{HistorialPacientes.resumen}"/>
+                        <h:outputText value="Costo consulta: "/>
+                        <p:inputText value="#{HistorialPacientes.costo}"/>
+                        <p:commandButton value="Registrar consulta" actionListener="#{HistorialPacientes.registrarConsulta()}"/>
+                    </h:panelGrid>
+                </p:layoutUnit>
+            </h:form>
+        </p:layout>
     </h:body>
 
 </html>
