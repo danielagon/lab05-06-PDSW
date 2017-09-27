@@ -13,6 +13,7 @@ import edu.eci.pdsw.samples.services.ExcepcionServiciosPacientes;
 import edu.eci.pdsw.samples.services.ServiciosHistorialPacientesFactory;
 import edu.eci.pdsw.samples.services.ServiciosPacientes;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +44,8 @@ public class RegistroConsultaBean implements Serializable {
     private Date fechayHora;
     private String resumen;
     private long costo;
+    private List<Paciente> pacientes;
+    private Paciente pacienteSeleccionado;
     
     public void registrarPaciente() throws ExcepcionServiciosPacientes{
         int posicion=0;
@@ -67,6 +70,22 @@ public class RegistroConsultaBean implements Serializable {
         }catch (ExcepcionServiciosPacientes e){
         
         }
+    }
+    
+    public List<Paciente> getPacientes() {
+        return pacientes;
+    }
+
+    public void setPacientes(List<Paciente> pacientes) {
+        this.pacientes = pacientes;
+    }
+
+    public Paciente getPacienteSeleccionado() {
+        return pacienteSeleccionado;
+    }
+
+    public void setPacienteSeleccionado(Paciente pacienteSeleccionado) {
+        this.pacienteSeleccionado = pacienteSeleccionado;
     }
 
     public Date getFechayHora() {
@@ -158,6 +177,7 @@ public class RegistroConsultaBean implements Serializable {
     public RegistroConsultaBean() {
         try{
             epsRegistradas=servicepacientes.obtenerEPSsRegistradas();
+            pacientes=servicepacientes.consultarPacientes();
         }catch (ExcepcionServiciosPacientes e){
             
         }
