@@ -8,34 +8,41 @@
     <h:body>
         <p:layout fullPage="true">
             <h:form id="registroPacientes">
-                <p:layoutUnit position="west" style="min-width:400px;min-height:200px;">
-                    <h:panelGrid columns="2" rowClasses="6">
-                        <h:outputText value="Nombre paciente:"/>
-                        <p:inputText value="#{HistorialPacientes.nombre}"/>
-                        <h:outputText value="Tipo de Identificacion:"/>
-                        <p:inputText value="#{HistorialPacientes.tipoId}"/>
-                        <h:outputText value="Numero de idenificacion:"/>
-                        <p:inputText value="#{HistorialPacientes.id}"/>
-                        <h:outputText  value="Fecha de nacimiento:"/>
-                        <p:calendar value="#{HistorialPacientes.fechaNac}" pattern="MM/dd/yyyy"/>
-                        <p:outputLabel for="eps" value="EPS:" />
-                        <p:selectOneMenu id="eps" value="#{HistorialPacientes.eps}">
-                            <f:selectItem itemLabel="Seleccionar EPS" noSelectionOption="true"/>
-                            <f:selectItems value="#{HistorialPacientes.epsNombres}"/>
-                        </p:selectOneMenu>
-                        <p:commandButton value="Registrar paciente" actionListener="#{HistorialPacientes.registrarPaciente()}" update="tablaPacientes"/>
-                    </h:panelGrid>    
-                </p:layoutUnit> 
+                <p:layoutUnit position="west" style="min-width:450px;min-height:200px;">
+                    <p:panel id="basic" header="Registrar Paciente" style="margin-bottom:20px">
+                        <h:panelGrid columns="2" rowClasses="6">
+                            <h:outputText value="Nombre paciente:"/>
+                            <p:inputText value="#{HistorialPacientes.nombre}"/>
+                            <h:outputText value="Tipo de Identificacion:"/>
+                            <p:selectOneMenu id="tipoIdentificacion" value="#{HistorialPacientes.tipoId}">
+                                <f:selectItems value="#{HistorialPacientes.listaTiposId}" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Numero de idenificacion:"/>
+                            <p:inputText value="#{HistorialPacientes.id}"/>
+                            <h:outputText  value="Fecha de nacimiento:"/>
+                            <p:calendar value="#{HistorialPacientes.fechaNac}" pattern="MM/dd/yyyy"/>
+                            <p:outputLabel for="eps" value="EPS:" />
+                            <p:selectOneMenu id="eps" value="#{HistorialPacientes.eps}">
+                                <f:selectItems value="#{HistorialPacientes.epsNombres}"/>
+                            </p:selectOneMenu>
+                            <p:growl id="message" showDetail="true" />
+                            <p:commandButton value="Registrar paciente" actionListener="#{HistorialPacientes.setPacientes(null)}" update="tablaPacientes, message"/>
+                        </h:panelGrid>    
+                    </p:panel>
+                </p:layoutUnit>
+                 
                 <p:layoutUnit position="center">
-                    <p:dataTable rowIndexVar="fila" id="tablaPacientes" var="paciente" value="#{HistorialPacientes.pacientes}"  selection="#{HistorialPacientes.pacienteSeleccionado}" selectionMode="single" rowKey="#{paciente.id}" >
+                    <p:panel header="Pacientes Registrados" style="margin-bottom:20px">
+                        <p:dataTable rowIndexVar="fila" id="tablaPacientes" var="paciente" value="#{HistorialPacientes.pacientes}"  selection="#{HistorialPacientes.pacienteSeleccionado}" selectionMode="single" rowKey="#{paciente.id}" >
                         <p:column headerText="Paciente">
                             <h:outputText value="#{paciente.nombre}" />
                         </p:column>
                         <p:column headerText="Numero de identificacion">
                             <h:outputText value="#{paciente.id}" />
                         </p:column>
-                    </p:dataTable>
-                    <p:commandButton value="Registrar cita" actionListener="#{HistorialPacientes.seleccionarPaciente()}" action="registroconsultas"/> 
+                        </p:dataTable>
+                        <p:commandButton value="Registrar cita" actionListener="#{HistorialPacientes.seleccionarPaciente()}" action="registroconsultas"/> 
+                    </p:panel>
                 </p:layoutUnit> 
             </h:form>
         </p:layout>

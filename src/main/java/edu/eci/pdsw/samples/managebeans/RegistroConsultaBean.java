@@ -26,6 +26,7 @@ import org.primefaces.context.RequestContext;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -48,32 +49,32 @@ public class RegistroConsultaBean implements Serializable {
     private List<Paciente> pacientes;
     private Paciente pacienteSeleccionado;
     private Set<Consulta> consultas;
+    private List<String> listaTiposId;
     
-    public void registrarPaciente() throws ExcepcionServiciosPacientes{
-        int posicion=0;
-        for (int i=0; i<epsRegistradas.size();i++){
-            if (epsRegistradas.get(i).getNombre().equals(eps)){
-                posicion=i;
-            }
-        }
-        try{
-            servicepacientes.registrarNuevoPaciente(new Paciente(id,tipoId,nombre,fechaNac,epsRegistradas.get(posicion)));
-            pacientes=servicepacientes.consultarPacientes();
-        }catch(ExcepcionServiciosPacientes e){
-            
-        }
-        
-    }
     
     public void registrarConsulta() throws ExcepcionServiciosPacientes{
         try{
             servicepacientes.agregarConsultaPaciente(pacienteSeleccionado.getId(), pacienteSeleccionado.getTipoId(), new Consulta(fechayHora,resumen,costo));
             consultas=pacienteSeleccionado.getConsultas();
         }catch (ExcepcionServiciosPacientes e){
-            
+           showMessage("Paciente no registrado", e.getMessage());
         }
     }
 
+    public List<String> getListaTiposId() {
+        listaTiposId = new ArrayList<>();
+        listaTiposId.add("CC-Cedula de Ciudadania");
+        listaTiposId.add("TI-Tarjeta de Identidad");
+        listaTiposId.add("CE-Cedula de Extranjeria");
+        listaTiposId.add("Registro Civil de Nacimiento");
+        return listaTiposId;
+    }
+
+    public void setListaTiposId(List<String> listaTiposId) {
+        this.listaTiposId = listaTiposId;
+    }
+    
+    
     public Set<Consulta> getConsultas() {
         return consultas;
     }
@@ -84,11 +85,27 @@ public class RegistroConsultaBean implements Serializable {
     
     
     public List<Paciente> getPacientes() {
+        try{
+        pacientes=servicepacientes.consultarPacientes();
+        }catch (ExcepcionServiciosPacientes e){
+            showMessage("Paciente no registrado", e.getMessage());
+        }
         return pacientes;
     }
 
-    public void setPacientes(List<Paciente> pacientes) {
-        this.pacientes = pacientes;
+    public void setPacientes(List<Paciente> paciente) {
+        int posicion=0;
+        for (int i=0; i<epsRegistradas.size();i++){
+            if (epsRegistradas.get(i).getNombre().equals(eps)){
+                posicion=i;
+            }
+        }
+        try{
+            servicepacientes.registrarNuevoPaciente(new Paciente(id,tipoId,nombre,fechaNac,epsRegistradas.get(posicion)));
+            pacientes=servicepacientes.consultarPacientes();
+        }catch(ExcepcionServiciosPacientes e){
+            showMessage("Paciente no registrado", e.getMessage());
+        }
     }
 
     public Paciente getPacienteSeleccionado() {
@@ -126,6 +143,15 @@ public class RegistroConsultaBean implements Serializable {
     
     
     public List<String> getEpsNombres() {
+        try{
+        epsRegistradas=servicepacientes.obtenerEPSsRegistradas();
+        }catch (ExcepcionServiciosPacientes e){
+            showMessage("", e.getMessage());
+        }
+        epsNombres=new ArrayList<String>();
+        for (Eps i:epsRegistradas){
+            epsNombres.add(i.getNombre());
+        }
         return epsNombres;
     }
 
@@ -185,17 +211,7 @@ public class RegistroConsultaBean implements Serializable {
     }
 
     public RegistroConsultaBean() {
-        try{
-            epsRegistradas=servicepacientes.obtenerEPSsRegistradas();
-            pacientes=servicepacientes.consultarPacientes();
-        }catch (ExcepcionServiciosPacientes e){
-            
-        }
-        epsNombres=new ArrayList<String>();
-        for (Eps i:epsRegistradas){
-            
-            epsNombres.add(i.getNombre());
-        }
+        
     }
 
     public void showMessage(String estado, String mensaje) {
