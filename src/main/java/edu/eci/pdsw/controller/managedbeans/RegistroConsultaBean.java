@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.eci.pdsw.samples.managebeans;
+package edu.eci.pdsw.controller.managedbeans;
 
 
 import edu.eci.pdsw.samples.entities.Consulta;

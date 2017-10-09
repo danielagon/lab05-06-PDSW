@@ -8,7 +8,13 @@ package edu.eci.pdsw.samples.services;
 import com.google.inject.AbstractModule;
 import static com.google.inject.Guice.createInjector;
 import com.google.inject.Injector;
-import edu.eci.pdsw.samples.services.impl.ServiciosPacientesMock;
+import edu.eci.pdsw.samples.services.impl.ServiciosPacientesImpl;
+import static com.google.inject.Guice.createInjector;
+import edu.eci.pdsw.persistence.EPSDAO;
+import edu.eci.pdsw.persistence.PacienteDAO;
+import edu.eci.pdsw.persistence.mybatis.EPSDAOMyBatis;
+import edu.eci.pdsw.persistence.mybatis.PacienteDAOMyBatis;
+import edu.eci.pdsw.persistence.mybatis.mappers.PacienteMapper;
 
 
 /**
@@ -27,7 +33,9 @@ public class ServiciosHistorialPacientesFactory {
 
             @Override
             protected void configure() {
-                bind(ServiciosPacientes.class).to(ServiciosPacientesMock.class);
+                //bind(ServiciosPacientes.class).to(ServiciosPacientesImpl.class);
+                bind(PacienteDAO.class).to(PacienteDAOMyBatis.class);
+                bind(EPSDAO.class).to(EPSDAOMyBatis.class);
             }
 
         }

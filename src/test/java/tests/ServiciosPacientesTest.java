@@ -9,7 +9,7 @@ import edu.eci.pdsw.samples.entities.Paciente;
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.services.ExcepcionServiciosPacientes;
-import edu.eci.pdsw.samples.services.impl.ServiciosPacientesMock;
+import edu.eci.pdsw.samples.services.impl.ServiciosPacientesImpl;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -51,7 +51,7 @@ public class ServiciosPacientesTest {
     
     @Test
     public void registrarPacienteRepetido(){
-        ServiciosPacientesMock servicios= new ServiciosPacientesMock();
+        ServiciosPacientesImpl servicios= new ServiciosPacientesImpl();
         try{
             servicios.registrarNuevoPaciente(new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
             servicios.registrarNuevoPaciente(new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
@@ -62,7 +62,7 @@ public class ServiciosPacientesTest {
     
     @Test
     public void registrarPacienteIdentificacionInvalida(){
-        ServiciosPacientesMock servicios= new ServiciosPacientesMock();
+        ServiciosPacientesImpl servicios= new ServiciosPacientesImpl();
         try{
             servicios.registrarNuevoPaciente(new Paciente(0,"CC", "Rodolfo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
         }catch (ExcepcionServiciosPacientes e){
@@ -72,7 +72,7 @@ public class ServiciosPacientesTest {
     
     @Test
     public void registroPaciente(){
-        ServiciosPacientesMock servicios= new ServiciosPacientesMock();
+        ServiciosPacientesImpl servicios= new ServiciosPacientesImpl();
         try{
             servicios.registrarNuevoPaciente(new Paciente(145,"hola", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
         }catch (ExcepcionServiciosPacientes e){
@@ -81,7 +81,7 @@ public class ServiciosPacientesTest {
     }
     @Test    
     public void registroConsultas(){
-        ServiciosPacientesMock servicios=new ServiciosPacientesMock();
+        ServiciosPacientesImpl servicios=new ServiciosPacientesImpl();
         try{
             servicios.agregarConsultaPaciente(0, "CC", new Consulta(java.sql.Date.valueOf("2000-01-01"), "Dolor de cabeza", 454));  
         }catch(ExcepcionServiciosPacientes e){
@@ -91,7 +91,7 @@ public class ServiciosPacientesTest {
     
     @Test
     public void registrarConsultaPaciente(){
-        ServiciosPacientesMock servicios=new ServiciosPacientesMock();
+        ServiciosPacientesImpl servicios=new ServiciosPacientesImpl();
         try{
             Paciente paciente=new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9"));
             servicios.registrarNuevoPaciente(paciente);

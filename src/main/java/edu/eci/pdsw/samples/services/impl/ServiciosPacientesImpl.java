@@ -16,6 +16,9 @@
  */
 package edu.eci.pdsw.samples.services.impl;
 
+import com.google.inject.Inject;
+import edu.eci.pdsw.persistence.EPSDAO;
+import edu.eci.pdsw.persistence.PacienteDAO;
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
@@ -36,13 +39,17 @@ import java.util.logging.Logger;
  *
  * @author hcadavid
  */
-public class ServiciosPacientesMock implements ServiciosPacientes {
+public class ServiciosPacientesImpl implements ServiciosPacientes {
 
     private final Map<Tupla<Integer, String>, Paciente> pacientes;
     private final List<Eps> epsregistradas;
     private int idconsulta = 1;
+    @Inject
+    private PacienteDAO paciente;
+    @Inject
+    private EPSDAO eps;
 
-    public ServiciosPacientesMock() {
+    public ServiciosPacientesImpl() {
         this.pacientes = new LinkedHashMap<>();
         epsregistradas = new LinkedList<>();
         cargarDatosEstaticos(pacientes);
@@ -188,7 +195,7 @@ public class ServiciosPacientesMock implements ServiciosPacientes {
             agregarConsultaPaciente(7, "CC", consulta9);
 
         } catch (ExcepcionServiciosPacientes ex) {
-            Logger.getLogger(ServiciosPacientesMock.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
