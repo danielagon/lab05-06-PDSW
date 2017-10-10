@@ -54,6 +54,7 @@ public class RegistroConsultaBean implements Serializable {
     
     public void registrarConsulta() throws ExcepcionServiciosPacientes{
         try{
+            servicepacientes.obtenerEPSsRegistradas();
             servicepacientes.agregarConsultaPaciente(pacienteSeleccionado.getId(), pacienteSeleccionado.getTipoId(), new Consulta(fechayHora,resumen,costo));
             consultas=pacienteSeleccionado.getConsultas();
         }catch (ExcepcionServiciosPacientes e){

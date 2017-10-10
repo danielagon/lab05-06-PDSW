@@ -10,5 +10,9 @@ package edu.eci.pdsw.persistence;
  * @author 2109734
  */
 public interface EPSDAO {
-    
+    public void loadAll();
+    public void load();
+    public void loadByID(int  id);
+    public void save();
+    public void update();
 }

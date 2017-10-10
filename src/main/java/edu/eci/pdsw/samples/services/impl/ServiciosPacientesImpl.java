@@ -50,6 +50,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     private EPSDAO eps;
 
     public ServiciosPacientesImpl() {
+        
         this.pacientes = new LinkedHashMap<>();
         epsregistradas = new LinkedList<>();
         cargarDatosEstaticos(pacientes);
@@ -202,6 +203,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     
     @Override
     public List<Eps> obtenerEPSsRegistradas() throws ExcepcionServiciosPacientes{
+        eps.loadAll();
         return epsregistradas;
     }
 
