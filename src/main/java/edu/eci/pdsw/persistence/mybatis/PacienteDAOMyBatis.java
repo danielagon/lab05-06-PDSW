@@ -5,10 +5,7 @@
  */
 package edu.eci.pdsw.persistence.mybatis;
 
-import com.google.inject.AbstractModule;
-import static com.google.inject.Guice.createInjector;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import edu.eci.pdsw.persistence.PacienteDAO;
 import edu.eci.pdsw.persistence.mybatis.mappers.PacienteMapper;
 import edu.eci.pdsw.samples.entities.Consulta;

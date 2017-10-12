@@ -5,8 +5,6 @@
  */
 package edu.eci.pdsw.samples.services;
 
-import com.google.inject.AbstractModule;
-import static com.google.inject.Guice.createInjector;
 import com.google.inject.Injector;
 import edu.eci.pdsw.samples.services.impl.ServiciosPacientesImpl;
 import static com.google.inject.Guice.createInjector;
@@ -14,7 +12,6 @@ import edu.eci.pdsw.persistence.EPSDAO;
 import edu.eci.pdsw.persistence.PacienteDAO;
 import edu.eci.pdsw.persistence.mybatis.EPSDAOMyBatis;
 import edu.eci.pdsw.persistence.mybatis.PacienteDAOMyBatis;
-import edu.eci.pdsw.persistence.mybatis.mappers.PacienteMapper;
 import org.mybatis.guice.XMLMyBatisModule;
 import org.mybatis.guice.datasource.helper.JdbcHelper;
 

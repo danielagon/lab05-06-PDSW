@@ -56,7 +56,6 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         this.pacientes = new LinkedHashMap<>();
         epsregistradas = new LinkedList<>();
         cargarDatosEstaticos(pacientes);
-        eps.loadAll();
     }
     
     @Transactional

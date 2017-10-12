@@ -10,6 +10,8 @@ import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.services.ExcepcionServiciosPacientes;
 import edu.eci.pdsw.samples.services.impl.ServiciosPacientesImpl;
+import edu.eci.pdsw.samples.services.ServiciosHistorialPacientesFactory;
+import edu.eci.pdsw.samples.services.ServiciosPacientes;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -22,7 +24,7 @@ import static org.junit.Assert.*;
  * CLASES DE EQUIVALENCIA REGISTRO NUEVO PACIENTE
  * 
  * 
- *CE1: DESCRIPCION: El nuevo paciente ya esta registrado (cedula sea igual)
+ *CE1: DESCRIPCION: El nuevo panew ServiciosPacientesImpl()ciente ya esta registrado (cedula sea igual)
  *     RESULTADOS: Excepcion
  * 
  *CE2: DESCRIPCION: cedula del paciente nula
@@ -41,17 +43,18 @@ import static org.junit.Assert.*;
  *      RESULTADO: El id de la consulta aumenta 1 y se agrega la consulta al paciente
  */
 public class ServiciosPacientesTest {
-    
+    private ServiciosPacientes servicios;
     public ServiciosPacientesTest() {
     }
     
     @Before
     public void setUp() {
+        servicios= ServiciosHistorialPacientesFactory.getInstance().getTestingServiciosPaciente();
     }
     
     @Test
     public void registrarPacienteRepetido(){
-        ServiciosPacientesImpl servicios= new ServiciosPacientesImpl();
+        
         try{
             servicios.registrarNuevoPaciente(new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
             servicios.registrarNuevoPaciente(new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
@@ -62,7 +65,7 @@ public class ServiciosPacientesTest {
     
     @Test
     public void registrarPacienteIdentificacionInvalida(){
-        ServiciosPacientesImpl servicios= new ServiciosPacientesImpl();
+        
         try{
             servicios.registrarNuevoPaciente(new Paciente(0,"CC", "Rodolfo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
         }catch (ExcepcionServiciosPacientes e){
@@ -72,16 +75,14 @@ public class ServiciosPacientesTest {
     
     @Test
     public void registroPaciente(){
-        ServiciosPacientesImpl servicios= new ServiciosPacientesImpl();
         try{
             servicios.registrarNuevoPaciente(new Paciente(145,"hola", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9")));
         }catch (ExcepcionServiciosPacientes e){
             assertEquals(e.getMessage(),"El tipo de identificaión no es valido");
         }
     }
-    @Test    
+    @Test 
     public void registroConsultas(){
-        ServiciosPacientesImpl servicios=new ServiciosPacientesImpl();
         try{
             servicios.agregarConsultaPaciente(0, "CC", new Consulta(java.sql.Date.valueOf("2000-01-01"), "Dolor de cabeza", 454));  
         }catch(ExcepcionServiciosPacientes e){
@@ -91,7 +92,6 @@ public class ServiciosPacientesTest {
     
     @Test
     public void registrarConsultaPaciente(){
-        ServiciosPacientesImpl servicios=new ServiciosPacientesImpl();
         try{
             Paciente paciente=new Paciente(77777,"CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), new Eps("SaludTotal", "8439009323-9"));
             servicios.registrarNuevoPaciente(paciente);

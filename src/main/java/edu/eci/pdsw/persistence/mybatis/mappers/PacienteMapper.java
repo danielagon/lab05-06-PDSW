@@ -1,7 +1,6 @@
 package edu.eci.pdsw.persistence.mybatis.mappers;
 
 
-
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
