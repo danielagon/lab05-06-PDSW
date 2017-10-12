@@ -10,24 +10,30 @@ import edu.eci.pdsw.persistence.EPSDAO;
 import edu.eci.pdsw.persistence.mybatis.mappers.EpsMapper;
 import edu.eci.pdsw.samples.entities.Eps;
 import java.util.List;
+import javax.persistence.PersistenceException;
 
 /**
  *
  * @author 2109734
  */
 public class EPSDAOMyBatis implements EPSDAO{
-    private List<Eps> allEps;
+    
     @Inject
     private EpsMapper eps;
 
     @Override
-    public void loadAll() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        allEps=eps.loadAllEPS();
+    public List<Eps> loadAll() throws PersistenceException{
+        List<Eps> allEps=null;
+        try{
+            allEps=eps.loadAllEPS();
+        }catch(Exception e){
+            throw new PersistenceException("Error al cargar todas las Eps's ",e);
+        }
         for (Eps e:allEps){
             System.out.println("PROBAAAANDOO");
             System.out.println(e.getNombre());
         }
+        return allEps;
     }
 
     @Override

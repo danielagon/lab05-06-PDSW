@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 
 /**
  *
@@ -42,7 +44,7 @@ import java.util.logging.Logger;
 public class ServiciosPacientesImpl implements ServiciosPacientes {
 
     private final Map<Tupla<Integer, String>, Paciente> pacientes;
-    private final List<Eps> epsregistradas;
+    private List<Eps> epsregistradas;
     private int idconsulta = 1;
     @Inject
     private PacienteDAO paciente;
@@ -54,33 +56,56 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         this.pacientes = new LinkedHashMap<>();
         epsregistradas = new LinkedList<>();
         cargarDatosEstaticos(pacientes);
+        eps.loadAll();
     }
-
+    
+    @Transactional
     @Override
     public Paciente consultarPaciente(int idPaciente, String tipoid) throws ExcepcionServiciosPacientes {
+        Paciente p=null;
+        try{
+            p=paciente.loadByID(idPaciente, tipoid);
+        }catch (PersistenceException e){
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+        /*
         Paciente paciente = pacientes.get(new Tupla<>(idPaciente, tipoid));
         if (paciente == null) {
             throw new ExcepcionServiciosPacientes("Paciente " + idPaciente + " no esta registrado");
         } else {
             return paciente;
         }
-
+        */
+        return p;
     }
-
+    
+    @Transactional
     @Override
-    public void registrarNuevoPaciente(Paciente paciente) throws ExcepcionServiciosPacientes {
-        
+    public void registrarNuevoPaciente(Paciente p) throws ExcepcionServiciosPacientes {
+        try{
+            paciente.load(p);
+        }catch (PersistenceException e){
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+        /*
         if (pacientes.containsKey(new Tupla<> (paciente.getId(), paciente.getTipoId()))){
             throw new ExcepcionServiciosPacientes("El paciente ya se encuentra registrado");
         }else if (paciente.getId()<=0){
             throw new ExcepcionServiciosPacientes("El numero de identificacion no es valido");
         }
         pacientes.put(new Tupla<>(paciente.getId(), paciente.getTipoId()), paciente);
+        */
     }
 
+    @Transactional
     @Override
     public void agregarConsultaPaciente(int idPaciente, String tipoid, Consulta consulta) throws ExcepcionServiciosPacientes {
-        
+        try{
+            paciente.save(consulta, idPaciente, tipoid);
+        }catch (PersistenceException e){
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+        /*
         Paciente paciente = pacientes.get(new Tupla<>(idPaciente, tipoid));
         if (paciente != null) {
             consulta.setId(idconsulta);
@@ -89,15 +114,24 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         } else {
             throw new ExcepcionServiciosPacientes("Paciente " + idPaciente + " no esta registrado");
         }
+        */
     }
 
+    @Transactional
     @Override
     public List<Paciente> consultarPacientes() throws ExcepcionServiciosPacientes {
         List<Paciente> temp = new ArrayList<>();
-        temp.addAll(pacientes.values());
+        try{
+            temp=paciente.loadAll();
+        }catch (PersistenceException e){
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+        /*
+        temp.addAll(pacientes.values());*/
         return temp;
     }
 
+    @Transactional
     @Override
     public List<Consulta> obtenerConsultasEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         List<Consulta> temp = new ArrayList<>();
@@ -113,6 +147,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         return temp;
     }
 
+    @Transactional
     @Override
     public List<Consulta> obtenerConsultasEps(String nameEps) throws ExcepcionServiciosPacientes {
         List<Consulta> temp = new ArrayList<>();
@@ -127,6 +162,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         return temp;
     }
 
+    @Transactional
     @Override
     public long obtenerCostoEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         long deuda = 0;
@@ -140,6 +176,17 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
             }
         }
         return deuda;
+    }
+    
+    @Transactional
+    @Override
+    public List<Eps> obtenerEPSsRegistradas() throws ExcepcionServiciosPacientes{
+        try{
+            epsregistradas=eps.loadAll();
+        }catch(PersistenceException e){
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return epsregistradas;
     }
 
     private void cargarDatosEstaticos(Map<Tupla<Integer, String>, Paciente> pacientes) {
@@ -201,11 +248,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
 
     }
     
-    @Override
-    public List<Eps> obtenerEPSsRegistradas() throws ExcepcionServiciosPacientes{
-        eps.loadAll();
-        return epsregistradas;
-    }
+    
 
 }
 
