@@ -8,3 +8,6 @@ deployment:
     heroku: 
       appname: labpdsw
 
+test:
+  post:
+    - mvn site
