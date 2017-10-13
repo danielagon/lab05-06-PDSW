@@ -7,7 +7,4 @@ deployment:
     branch: master
     heroku: 
       appname: labpdsw
-      
-test:
-  post:
-    - mvn site
+
