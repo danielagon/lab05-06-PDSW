@@ -29,30 +29,26 @@ public class EPSDAOMyBatis implements EPSDAO{
         }catch(Exception e){
             throw new PersistenceException("Error al cargar todas las Eps's ",e);
         }
-        for (Eps e:allEps){
-            System.out.println("PROBAAAANDOO");
-            System.out.println(e.getNombre());
-        }
         return allEps;
     }
 
     @Override
-    public void load() {
+    public void load() throws PersistenceException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void loadByID(int id) {
+    public void loadByID(int id) throws PersistenceException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void save() {
+    public void save() throws PersistenceException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update() {
+    public void update() throws PersistenceException{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -31,7 +31,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
@@ -43,19 +42,20 @@ import javax.transaction.Transactional;
  */
 public class ServiciosPacientesImpl implements ServiciosPacientes {
 
-    private final Map<Tupla<Integer, String>, Paciente> pacientes;
-    private List<Eps> epsregistradas;
-    private int idconsulta = 1;
     @Inject
     private PacienteDAO paciente;
     @Inject
     private EPSDAO eps;
-
+    
+    private final Map<Tupla<Integer, String>, Paciente> pacientes;
+    private List<Eps> epsregistradas;
+    private int idconsulta = 1;
+    
     public ServiciosPacientesImpl() {
         
         this.pacientes = new LinkedHashMap<>();
         epsregistradas = new LinkedList<>();
-        cargarDatosEstaticos(pacientes);
+        //cargarDatosEstaticos(pacientes);
     }
     
     @Transactional
@@ -64,6 +64,9 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         Paciente p=null;
         try{
             p=paciente.loadByID(idPaciente, tipoid);
+            if (p == null) {
+                throw new ExcepcionServiciosPacientes("Paciente " + idPaciente + " no esta registrado");
+            }
         }catch (PersistenceException e){
             Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -82,7 +85,13 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public void registrarNuevoPaciente(Paciente p) throws ExcepcionServiciosPacientes {
         try{
-            paciente.load(p);
+            if (pacientes.containsKey(new Tupla<> (p.getId(), p.getTipoId()))){
+                throw new ExcepcionServiciosPacientes("El paciente ya se encuentra registrado");
+            }else if (p.getId()<=0){
+                throw new ExcepcionServiciosPacientes("El numero de identificacion no es valido");
+            }else{
+                paciente.load(p);
+            }
         }catch (PersistenceException e){
             Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -100,7 +109,15 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public void agregarConsultaPaciente(int idPaciente, String tipoid, Consulta consulta) throws ExcepcionServiciosPacientes {
         try{
-            paciente.save(consulta, idPaciente, tipoid);
+            Paciente p = pacientes.get(new Tupla<>(idPaciente, tipoid));
+            if (p != null) {
+                consulta.setId(idconsulta);
+                idconsulta++;
+                paciente.save(consulta, idPaciente, tipoid);
+            }else{
+                throw new ExcepcionServiciosPacientes("Paciente " + idPaciente + " no esta registrado");
+            }
+            
         }catch (PersistenceException e){
             Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -134,9 +151,9 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public List<Consulta> obtenerConsultasEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         List<Consulta> temp = new ArrayList<>();
-        for (Paciente paciente : pacientes.values()) {
-            if (paciente.getEps().getNombre().equals(nameEps)) {
-                for (Consulta consulta : paciente.getConsultas()) {
+        for (Paciente p : pacientes.values()) {
+            if (p.getEps().getNombre().equals(nameEps)) {
+                for (Consulta consulta : p.getConsultas()) {
                     if (consulta.getFechayHora().before(fechaFin) && consulta.getFechayHora().after(fechaInicio)) {
                         temp.add(consulta);
                     }
@@ -150,9 +167,9 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public List<Consulta> obtenerConsultasEps(String nameEps) throws ExcepcionServiciosPacientes {
         List<Consulta> temp = new ArrayList<>();
-        for (Paciente paciente : pacientes.values()) {
-            if (paciente.getEps().getNombre().equals(nameEps)) {
-                temp.addAll(paciente.getConsultas());
+        for (Paciente p : pacientes.values()) {
+            if (p.getEps().getNombre().equals(nameEps)) {
+                temp.addAll(p.getConsultas());
             }
         }
         if (temp.isEmpty()) {
@@ -165,9 +182,9 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public long obtenerCostoEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         long deuda = 0;
-        for (Paciente paciente : pacientes.values()) {
-            if (paciente.getEps().getNombre().equals(nameEps)) {
-                for (Consulta consulta : paciente.getConsultas()) {
+        for (Paciente p : pacientes.values()) {
+            if (p.getEps().getNombre().equals(nameEps)) {
+                for (Consulta consulta : p.getConsultas()) {
                     if (consulta.getFechayHora().after(fechaInicio) && consulta.getFechayHora().before(fechaFin)) {
                         deuda += consulta.getCosto();
                     }
@@ -196,14 +213,14 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
             Eps eps4 = new Eps("Coomeva", "482738221-1");
             Eps eps5 = new Eps("Medimas", "78239842232-2");
             Eps eps6 = new Eps("SaludTotal", "8439009323-9");
-
+            
             epsregistradas.add(eps1);
             epsregistradas.add(eps2);
             epsregistradas.add(eps3);
             epsregistradas.add(eps4);
             epsregistradas.add(eps5);
             epsregistradas.add(eps6);
-
+            
             Paciente paciente1 = new Paciente(1, "CC", "Juan Perez", java.sql.Date.valueOf("2000-01-01"), eps1);
             Paciente paciente2 = new Paciente(2, "CC", "Maria Rodriguez", java.sql.Date.valueOf("2000-01-01"), eps2);
             Paciente paciente3 = new Paciente(3, "CC", "Pedro Martinez", java.sql.Date.valueOf("1956-05-01"), eps3);
@@ -211,7 +228,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
             Paciente paciente5 = new Paciente(5, "CC", "Cristian Pinzon", java.sql.Date.valueOf("2000-01-01"), eps4);
             Paciente paciente6 = new Paciente(6, "CC", "Daniel Beltran", java.sql.Date.valueOf("1956-05-01"), eps5);
             Paciente paciente7 = new Paciente(7, "CC", "Ricardo Pinto", java.sql.Date.valueOf("1956-05-01"), eps6);
-
+            
             registrarNuevoPaciente(paciente1);
             registrarNuevoPaciente(paciente2);
             registrarNuevoPaciente(paciente3);
@@ -219,7 +236,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
             registrarNuevoPaciente(paciente5);
             registrarNuevoPaciente(paciente6);
             registrarNuevoPaciente(paciente7);
-
+            
             Consulta consulta1 = new Consulta(java.sql.Date.valueOf("2000-01-01"), "Dolor de cabeza", 454);
             Consulta consulta2 = new Consulta(java.sql.Date.valueOf("2000-01-02"), "Dolor de estomago", 271);
             Consulta consulta3 = new Consulta(java.sql.Date.valueOf("2000-04-01"), "Dolor de garganta", 222);
@@ -229,7 +246,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
             Consulta consulta7 = new Consulta(java.sql.Date.valueOf("2000-02-09"), "Vomito", 322);
             Consulta consulta8 = new Consulta(java.sql.Date.valueOf("2000-02-09"), "Alergia", 322);
             Consulta consulta9 = new Consulta(java.sql.Date.valueOf("2000-02-09"), "Resfriado", 322);
-
+            
             agregarConsultaPaciente(1, "CC", consulta1);
             agregarConsultaPaciente(1, "CC", consulta2);
             agregarConsultaPaciente(1, "CC", consulta3);
@@ -240,7 +257,6 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
             agregarConsultaPaciente(6, "CC", consulta8);
             agregarConsultaPaciente(7, "CC", consulta5);
             agregarConsultaPaciente(7, "CC", consulta9);
-
         } catch (ExcepcionServiciosPacientes ex) {
             Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

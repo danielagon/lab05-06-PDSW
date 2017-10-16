@@ -26,7 +26,6 @@ import org.primefaces.context.RequestContext;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 
 /**
  *
@@ -42,7 +41,7 @@ public class RegistroConsultaBean implements Serializable {
     private List<String> epsNombres;
     private Date fechaNac;
     private List<Eps> epsRegistradas;
-    private final ServiciosPacientes servicepacientes = ServiciosHistorialPacientesFactory.getInstance().getServiciosPaciente();
+    private static ServiciosPacientes servicepacientes = ServiciosHistorialPacientesFactory.getInstance().getServiciosPaciente();
     private Date fechayHora;
     private String resumen;
     private long costo;
@@ -209,10 +208,6 @@ public class RegistroConsultaBean implements Serializable {
 
     public void seleccionarPaciente(){
         consultas = pacienteSeleccionado.getConsultas();
-    }
-
-    public RegistroConsultaBean() {
-        
     }
 
     public void showMessage(String estado, String mensaje) {

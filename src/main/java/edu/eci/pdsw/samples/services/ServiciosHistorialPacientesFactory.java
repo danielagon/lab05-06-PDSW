@@ -39,23 +39,19 @@ public class ServiciosHistorialPacientesFactory {
                 bind(EPSDAO.class).to(EPSDAOMyBatis.class);                
                 bind(PacienteDAO.class).to(PacienteDAOMyBatis.class);
             }
-
-        }
-        );
+        });
 
         testInjector = createInjector(new XMLMyBatisModule() {
             
             @Override
             protected void initialize() {
-                install(JdbcHelper.PostgreSQL);
+                install(JdbcHelper.MySQL);
                 setClassPathResource("mybatis-config-h2.xml");
                 bind(ServiciosPacientes.class).to(ServiciosPacientesImpl.class);
                 bind(EPSDAO.class).to(EPSDAOMyBatis.class);                
                 bind(PacienteDAO.class).to(PacienteDAOMyBatis.class);
             }
-
-        }
-        );
+        });
 
     }
 

@@ -28,7 +28,7 @@ public class PacienteDAOMyBatis implements PacienteDAO{
         try{
             pacientes=paciente.loadPacientes();
         }catch(Exception e){
-            throw new PersistenceException("Error al cargar todos los pacientes",e);
+            throw new PersistenceException("Error al cargar todos los pacientes ",e);
         }
         return pacientes;
     }
@@ -38,7 +38,7 @@ public class PacienteDAOMyBatis implements PacienteDAO{
         try{
             paciente.insertarPaciente(p);
         }catch(Exception e){
-            throw new PersistenceException("Error al registrar el paciente"+p.getId(),e);
+            throw new PersistenceException("Error al registrar el paciente "+p.getId(),e);
         }
     }
 
@@ -48,7 +48,7 @@ public class PacienteDAOMyBatis implements PacienteDAO{
         try{
             p=paciente.loadPacienteById(id,tipoid);
         }catch(Exception e){
-            throw new PersistenceException("Error al cargar el paciente por Id"+id,e);
+            throw new PersistenceException("Error al cargar el paciente por Id "+id,e);
         }
         return p;
     }
@@ -66,7 +66,7 @@ public class PacienteDAOMyBatis implements PacienteDAO{
     @Override
     public void update(int id, String tipoId, String nombre, Eps eps, Paciente p) throws PersistenceException {
         try{
-            paciente.actualizarPaciente(0, tipoId, nombre, eps, p);
+            paciente.actualizarPaciente(id, tipoId, nombre, eps, p);
         }catch(Exception e){
             throw new PersistenceException("Error al actualizar el paciente "+p.getId(),e);
         }

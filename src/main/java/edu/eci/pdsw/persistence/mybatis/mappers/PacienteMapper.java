@@ -4,10 +4,8 @@ package edu.eci.pdsw.persistence.mybatis.mappers;
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
-import java.util.Date;
 
 import java.util.List;
-import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
 /**
