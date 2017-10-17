@@ -46,7 +46,7 @@
     
     </select>
     
-    <insert id="insertarPaciente"> 
+    <insert parameterType="map" id="insertarPaciente"> 
         insert into CM_PACIENTES (id, tipo_id, nombre, fecha_nacimiento, EPS_nit)
         values (#{paciente.id},#{paciente.tipoId},#{paciente.nombre},#{paciente.fechaNacimiento},#{paciente.eps.nit})
 

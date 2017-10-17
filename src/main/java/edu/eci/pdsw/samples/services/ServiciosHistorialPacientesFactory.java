@@ -58,13 +58,12 @@ public class ServiciosHistorialPacientesFactory {
     public ServiciosPacientes getServiciosPaciente() {
         return injector.getInstance(ServiciosPacientes.class);
     }
+    
+    public ServiciosPacientes getTestingServiciosPaciente() {
+        return testInjector.getInstance(ServiciosPacientes.class);
+    }
 
     public static ServiciosHistorialPacientesFactory getInstance() {
         return instance;
-    }
-    
-
-    public ServiciosPacientes getTestingServiciosPaciente() {
-        return testInjector.getInstance(ServiciosPacientes.class);
     }
 }

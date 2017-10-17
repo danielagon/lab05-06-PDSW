@@ -19,6 +19,7 @@ import javax.persistence.PersistenceException;
  * @author 2109734
  */
 public class PacienteDAOMyBatis implements PacienteDAO{
+    
     @Inject 
     private PacienteMapper paciente;
 
@@ -44,7 +45,7 @@ public class PacienteDAOMyBatis implements PacienteDAO{
 
     @Override
     public Paciente loadByID(int id, String tipoid) throws PersistenceException{
-        Paciente p;
+        Paciente p=null;
         try{
             p=paciente.loadPacienteById(id,tipoid);
         }catch(Exception e){

@@ -64,20 +64,9 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         Paciente p=null;
         try{
             p=paciente.loadByID(idPaciente, tipoid);
-            if (p == null) {
-                throw new ExcepcionServiciosPacientes("Paciente " + idPaciente + " no esta registrado");
-            }
         }catch (PersistenceException e){
             Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
         }
-        /*
-        Paciente paciente = pacientes.get(new Tupla<>(idPaciente, tipoid));
-        if (paciente == null) {
-            throw new ExcepcionServiciosPacientes("Paciente " + idPaciente + " no esta registrado");
-        } else {
-            return paciente;
-        }
-        */
         return p;
     }
     
@@ -85,52 +74,22 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public void registrarNuevoPaciente(Paciente p) throws ExcepcionServiciosPacientes {
         try{
-            if (pacientes.containsKey(new Tupla<> (p.getId(), p.getTipoId()))){
-                throw new ExcepcionServiciosPacientes("El paciente ya se encuentra registrado");
-            }else if (p.getId()<=0){
-                throw new ExcepcionServiciosPacientes("El numero de identificacion no es valido");
-            }else{
-                paciente.load(p);
-            }
+            paciente.load(p);
         }catch (PersistenceException e){
             Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
         }
-        /*
-        if (pacientes.containsKey(new Tupla<> (paciente.getId(), paciente.getTipoId()))){
-            throw new ExcepcionServiciosPacientes("El paciente ya se encuentra registrado");
-        }else if (paciente.getId()<=0){
-            throw new ExcepcionServiciosPacientes("El numero de identificacion no es valido");
-        }
-        pacientes.put(new Tupla<>(paciente.getId(), paciente.getTipoId()), paciente);
-        */
     }
 
     @Transactional
     @Override
     public void agregarConsultaPaciente(int idPaciente, String tipoid, Consulta consulta) throws ExcepcionServiciosPacientes {
         try{
-            Paciente p = pacientes.get(new Tupla<>(idPaciente, tipoid));
-            if (p != null) {
-                consulta.setId(idconsulta);
-                idconsulta++;
-                paciente.save(consulta, idPaciente, tipoid);
-            }else{
-                throw new ExcepcionServiciosPacientes("Paciente " + idPaciente + " no esta registrado");
-            }
-            
+            Paciente p = paciente.loadByID(idPaciente, tipoid);
+            p.getConsultas().add(consulta);
+            paciente.save(consulta, idPaciente, tipoid);            
         }catch (PersistenceException e){
             Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
         }
-        /*
-        Paciente paciente = pacientes.get(new Tupla<>(idPaciente, tipoid));
-        if (paciente != null) {
-            consulta.setId(idconsulta);
-            idconsulta++;
-            paciente.getConsultas().add(consulta);
-        } else {
-            throw new ExcepcionServiciosPacientes("Paciente " + idPaciente + " no esta registrado");
-        }
-        */
     }
 
     @Transactional
@@ -151,7 +110,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public List<Consulta> obtenerConsultasEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         List<Consulta> temp = new ArrayList<>();
-        for (Paciente p : pacientes.values()) {
+        for (Paciente p : paciente.loadAll()) {
             if (p.getEps().getNombre().equals(nameEps)) {
                 for (Consulta consulta : p.getConsultas()) {
                     if (consulta.getFechayHora().before(fechaFin) && consulta.getFechayHora().after(fechaInicio)) {
@@ -167,7 +126,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public List<Consulta> obtenerConsultasEps(String nameEps) throws ExcepcionServiciosPacientes {
         List<Consulta> temp = new ArrayList<>();
-        for (Paciente p : pacientes.values()) {
+        for (Paciente p : paciente.loadAll()) {
             if (p.getEps().getNombre().equals(nameEps)) {
                 temp.addAll(p.getConsultas());
             }
@@ -182,7 +141,7 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public long obtenerCostoEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         long deuda = 0;
-        for (Paciente p : pacientes.values()) {
+        for (Paciente p : paciente.loadAll()) {
             if (p.getEps().getNombre().equals(nameEps)) {
                 for (Consulta consulta : p.getConsultas()) {
                     if (consulta.getFechayHora().after(fechaInicio) && consulta.getFechayHora().before(fechaFin)) {
@@ -262,9 +221,6 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         }
 
     }
-    
-    
-
 }
 
 class Tupla<A, B> {
