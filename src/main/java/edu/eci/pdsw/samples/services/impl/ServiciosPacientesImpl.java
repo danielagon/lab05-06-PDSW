@@ -101,8 +101,6 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         }catch (PersistenceException e){
             Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
         }
-        /*
-        temp.addAll(pacientes.values());*/
         return temp;
     }
 
