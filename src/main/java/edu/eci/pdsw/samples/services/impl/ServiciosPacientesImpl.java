@@ -19,6 +19,7 @@ package edu.eci.pdsw.samples.services.impl;
 import com.google.inject.Inject;
 import edu.eci.pdsw.persistence.EPSDAO;
 import edu.eci.pdsw.persistence.PacienteDAO;
+import edu.eci.pdsw.persistence.PersistenceException;
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
@@ -33,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
 
 /**
@@ -108,14 +108,19 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public List<Consulta> obtenerConsultasEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         List<Consulta> temp = new ArrayList<>();
-        for (Paciente p : paciente.loadAll()) {
-            if (p.getEps().getNombre().equals(nameEps)) {
-                for (Consulta consulta : p.getConsultas()) {
-                    if (consulta.getFechayHora().before(fechaFin) && consulta.getFechayHora().after(fechaInicio)) {
-                        temp.add(consulta);
+        try {
+            for (Paciente p : paciente.loadAll()) {
+                if (p.getEps().getNombre().equals(nameEps)) {
+                    for (Consulta consulta : p.getConsultas()) {
+                        if (consulta.getFechayHora().before(fechaFin) && consulta.getFechayHora().after(fechaInicio)) {
+                            temp.add(consulta);
+                        }
                     }
                 }
             }
+            
+        } catch (PersistenceException ex) {
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return temp;
     }
@@ -124,13 +129,18 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public List<Consulta> obtenerConsultasEps(String nameEps) throws ExcepcionServiciosPacientes {
         List<Consulta> temp = new ArrayList<>();
-        for (Paciente p : paciente.loadAll()) {
-            if (p.getEps().getNombre().equals(nameEps)) {
-                temp.addAll(p.getConsultas());
+        try {
+            for (Paciente p : paciente.loadAll()) {
+                if (p.getEps().getNombre().equals(nameEps)) {
+                    temp.addAll(p.getConsultas());
+                }
             }
-        }
-        if (temp.isEmpty()) {
-            throw new ExcepcionServiciosPacientes("La EPS " + nameEps + " no se encuentra asociada a ningun paciente o no existe ");
+            if (temp.isEmpty()) {
+                throw new ExcepcionServiciosPacientes("La EPS " + nameEps + " no se encuentra asociada a ningun paciente o no existe ");
+            }
+            
+        } catch (PersistenceException ex) {
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return temp;
     }
@@ -139,14 +149,19 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
     @Override
     public long obtenerCostoEpsPorFecha(String nameEps, Date fechaInicio, Date fechaFin) throws ExcepcionServiciosPacientes {
         long deuda = 0;
-        for (Paciente p : paciente.loadAll()) {
-            if (p.getEps().getNombre().equals(nameEps)) {
-                for (Consulta consulta : p.getConsultas()) {
-                    if (consulta.getFechayHora().after(fechaInicio) && consulta.getFechayHora().before(fechaFin)) {
-                        deuda += consulta.getCosto();
+        try {
+            for (Paciente p : paciente.loadAll()) {
+                if (p.getEps().getNombre().equals(nameEps)) {
+                    for (Consulta consulta : p.getConsultas()) {
+                        if (consulta.getFechayHora().after(fechaInicio) && consulta.getFechayHora().before(fechaFin)) {
+                            deuda += consulta.getCosto();
+                        }
                     }
                 }
             }
+            
+        } catch (PersistenceException ex) {
+            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return deuda;
     }
@@ -157,7 +172,8 @@ public class ServiciosPacientesImpl implements ServiciosPacientes {
         try{
             epsregistradas=eps.loadAll();
         }catch(PersistenceException e){
-            Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
+            throw new ExcepcionServiciosPacientes("no se pudo cargar las eps");
+            //Logger.getLogger(ServiciosPacientesImpl.class.getName()).log(Level.SEVERE, null, e);
         }
         return epsregistradas;
     }

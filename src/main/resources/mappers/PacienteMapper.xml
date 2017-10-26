@@ -53,8 +53,8 @@
     </insert>
     
     <insert id="insertConsulta" useGeneratedKeys="true" keyProperty="con.id">
-	insert into CM_CONSULTAS (idCONSULTAS, fecha_y_hora, resumen, costo, PACIENTES_id, PACIENTES_tipo_id)
-        values (#{con.id},#{con.fechayHora},#{con.resumen},#{con.costo},#{idp},#{tipoidp})
+	insert into CM_CONSULTAS (fecha_y_hora, resumen, costo, PACIENTES_id, PACIENTES_tipo_id)
+        values (#{con.fechayHora},#{con.resumen},#{con.costo},#{idp},#{tipoidp})
     </insert>
     
     <update id="actualizarPaciente"> 

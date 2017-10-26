@@ -7,10 +7,10 @@ package edu.eci.pdsw.persistence.mybatis;
 
 import com.google.inject.Inject;
 import edu.eci.pdsw.persistence.EPSDAO;
+import edu.eci.pdsw.persistence.PersistenceException;
 import edu.eci.pdsw.persistence.mybatis.mappers.EpsMapper;
 import edu.eci.pdsw.samples.entities.Eps;
 import java.util.List;
-import javax.persistence.PersistenceException;
 
 /**
  *

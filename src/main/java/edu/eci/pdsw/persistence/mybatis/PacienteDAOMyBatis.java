@@ -7,12 +7,12 @@ package edu.eci.pdsw.persistence.mybatis;
 
 import com.google.inject.Inject;
 import edu.eci.pdsw.persistence.PacienteDAO;
+import edu.eci.pdsw.persistence.PersistenceException;
 import edu.eci.pdsw.persistence.mybatis.mappers.PacienteMapper;
 import edu.eci.pdsw.samples.entities.Consulta;
 import edu.eci.pdsw.samples.entities.Eps;
 import edu.eci.pdsw.samples.entities.Paciente;
 import java.util.List;
-import javax.persistence.PersistenceException;
 
 /**
  *

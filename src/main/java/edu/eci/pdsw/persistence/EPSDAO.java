@@ -7,7 +7,6 @@ package edu.eci.pdsw.persistence;
 
 import edu.eci.pdsw.samples.entities.Eps;
 import java.util.List;
-import javax.persistence.PersistenceException;
 
 /**
  *
@@ -15,8 +14,8 @@ import javax.persistence.PersistenceException;
  */
 public interface EPSDAO {
     public List<Eps> loadAll() throws PersistenceException;
-    public void load();
-    public void loadByID(int  id);
-    public void save();
-    public void update();
+    public void load() throws PersistenceException;
+    public void loadByID(int  id) throws PersistenceException;
+    public void save() throws PersistenceException;
+    public void update() throws PersistenceException;
 }

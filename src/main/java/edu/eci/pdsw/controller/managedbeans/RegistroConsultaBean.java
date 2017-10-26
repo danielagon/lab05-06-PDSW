@@ -27,6 +27,7 @@ import org.primefaces.context.RequestContext;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+
 /**
  *
  * @author 2106913
@@ -63,10 +64,10 @@ public class RegistroConsultaBean implements Serializable {
 
     public List<String> getListaTiposId() {
         listaTiposId = new ArrayList<>();
-        listaTiposId.add("CC-Cedula de Ciudadania");
-        listaTiposId.add("TI-Tarjeta de Identidad");
-        listaTiposId.add("CE-Cedula de Extranjeria");
-        listaTiposId.add("Registro Civil de Nacimiento");
+        listaTiposId.add("CC");
+        listaTiposId.add("TI");
+        listaTiposId.add("CE");
+        //listaTiposId.add("Registro Civil de Nacimiento");
         return listaTiposId;
     }
 
@@ -84,7 +85,7 @@ public class RegistroConsultaBean implements Serializable {
     }
     
     
-    public List<Paciente> getPacientes() {
+    public List<Paciente> getPacientes() throws ExcepcionServiciosPacientes{
         try{
         pacientes=servicepacientes.consultarPacientes();
         }catch (ExcepcionServiciosPacientes e){
@@ -93,7 +94,7 @@ public class RegistroConsultaBean implements Serializable {
         return pacientes;
     }
 
-    public void setPacientes(List<Paciente> paciente) {
+    public void setPacientes(List<Paciente> paciente) throws ExcepcionServiciosPacientes{
         int posicion=0;
         for (int i=0; i<epsRegistradas.size();i++){
             if (epsRegistradas.get(i).getNombre().equals(eps)){
@@ -142,7 +143,7 @@ public class RegistroConsultaBean implements Serializable {
     
     
     
-    public List<String> getEpsNombres() {
+    public List<String> getEpsNombres() throws ExcepcionServiciosPacientes{
         try{
         epsRegistradas=servicepacientes.obtenerEPSsRegistradas();
         }catch (ExcepcionServiciosPacientes e){

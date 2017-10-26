@@ -23,7 +23,7 @@
                 </p:layoutUnit>
                 <p:layoutUnit id="tabla_Consultas" position="center">
                     <p:panel header="Consultas del pacientes" style="margin-bottom:20px">
-                        <p:dataTable rowIndexVar="fila" id="tablaConsultas" var="consulta" value="#{HistorialPacientes.consultas}" rowKey="#{consulta}" >
+                        <p:dataTable id="tablaConsultas" rowIndexVar="fila" var="consulta" value="#{HistorialPacientes.consultas}" rowKey="#{consulta}" >
                             <p:column headerText="Fecha y Hora">
                                 <h:outputText value="#{consulta.fechayHora}" />
                             </p:column>
